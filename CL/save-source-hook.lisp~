@@ -1,0 +1,16 @@
+
+
+
+(defvar *source-storage* (make-hash-table))
+
+(defun source-of (name)
+  (gethash name *source-storage*))
+
+(defun source-save-hook (expander form env)
+  (when (eq #1=(car form) 'defun)
+    (setf (gethash #1# *source-storage*)
+	  form))
+  (funcall expander form env))
+
+*macroexpand-hook*
+()
