@@ -85,17 +85,23 @@ jellybean = banana id
 -- Relative Difficulty: 6
 apple :: (Misty m) => m a -> m (a -> b) -> m b
 apple a b = banana (flip furry' a) b
- 
+
 -- Exercise 14
 -- Relative Difficulty: 6
+
+{- ugly version :
 moppy :: (Misty m) => [a] -> (a -> m b) -> m [b]
 moppy xs f = foldr (\x a -> banana (\bs ->
-                                     banana (\b -> 
+                                     banana (\b ->
                                               unicorn (b:bs))
                                      x)
-                              a )           
+                              a )
                (unicorn [])
                (furry' f xs)
+-}
+moppy :: (Misty m) => [a] -> (a -> m b) -> m [b]
+moppy xs f = foldr g (unicorn []) (map f xs)
+  where g mb mbs = apple mbs (furry' (:) mb)
 
 -- Exercise 15
 -- Relative Difficulty: 6
@@ -108,7 +114,7 @@ sausage = (`moppy` id)
 -- (bonus: use apple + furry')
 banana2 :: (Misty m) => (a -> b -> c) -> m a -> m b -> m c
 banana2 f a b = apple b (furry' f a)
- 
+
 -- Exercise 17
 -- Relative Difficulty: 6
 -- (bonus: use apple + banana2)
