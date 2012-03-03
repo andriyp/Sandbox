@@ -9,7 +9,6 @@ import Control.Monad.State
 import Control.Monad.Reader
 import Control.Monad.Writer
 
-import Data.Typeable
 import Data.Maybe
 import Data.Map
 
@@ -29,7 +28,7 @@ data Expr = LitE Integer
           | VarE Id
           | LamE Id Expr
           | AppE Expr Expr
-          deriving (Show, Typeable)
+          deriving (Show)
 
 type Env = Map Id Val
 
@@ -247,9 +246,7 @@ runEval6 e i x = flip runStateT i $ runWriterT $ runErrorT $ runReaderT x e
 eval6 :: Expr -> Eval6 Val
 
 eval6 x = do tick
-             liftIO $ putStrLn $ "Evaluating " 
-               ++ tyConName (typeRepTyCon (typeOf x))
-               ++ "..."
+             liftIO $ putStrLn ("Evaluating " ++ show x ++ "...")
              eval6' x
 
 eval6' (LitE n) = return (IntV n)
