@@ -1,4 +1,0 @@
-module Sandbox.Image.BMP where
-import Codec.BMP
-
-test = 3
