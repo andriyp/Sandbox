@@ -1,5 +1,9 @@
+-- Monad Transformers and Modular Interpreters
+
 {-# LANGUAGE MultiParamTypeClasses, TypeOperators, TypeSynonymInstances,
              FlexibleInstances, FlexibleContexts, OverlappingInstances #-}
+
+module Papers.MTnMI ( Subtype(..), (:+:) ) where
 
 infixr 9 :+:
 

@@ -1,4 +1,4 @@
-
+module Exercises.TwentyIntermediateEx where
 
 class Fluffy f where
   furry :: (a -> b) -> f a -> f b
