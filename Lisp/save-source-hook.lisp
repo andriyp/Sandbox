@@ -23,4 +23,3 @@
 
 ;; test it:
 (source-of 'test)
-; => (DEFUN TEST (X Y) (* X Y X Y))
