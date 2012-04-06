@@ -1,0 +1,8 @@
+module Hacks.Dot where
+
+import Prelude hiding ( (.) )
+
+-- infixl (.) 
+o (.) f = f o
+
+main = putStrLn toLower

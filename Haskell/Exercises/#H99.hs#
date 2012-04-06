@@ -1,0 +1,212 @@
+module Exercises.H99 where
+
+import Prelude hiding ( last, length, reverse )
+import Data.List ( nub, sort, genericTake, genericLength )
+import System.Random hiding ( split )
+import Debug.Trace
+
+-- | 1: Find the last element of a list.
+
+last []     = error "Empty list!"
+last [x]    = x
+last (_:xs) = last xs
+
+t1 = last [1,2,3,4]
+
+-- | 2: Find the last but one element of a list.
+
+butlast []     = error "Empty list!"
+butlast [_]    = error "One-element list!"
+butlast [x,_]  = x
+butlast (_:xs) = butlast xs
+
+t2 = butlast [1,2,3,4]
+
+-- | 3: Find the K'th element of a list. The first element in the list is number 1.
+
+nth _ []     = error "Empty list!"
+nth 0 (x:_)  = x
+nth k (_:xs) = nth (k-1) xs
+
+t3 = nth 1 [1,2,3,4]
+
+-- | 4: Find the number of elements of a list.
+
+length []     = 0
+length (_:xs) = 1 + length xs
+
+t4 = length [1,2,3,4]
+
+-- | 5: Reverse a list.
+
+reverse xs = f xs []
+  where f []     acc = acc
+        f (y:ys) acc = f ys (y:acc)
+
+t5 = reverse [1,2,3,4]
+
+-- | 6: Find out whether a list is a palindrome.
+-- |    A palindrome can be read forward or backward; e.g. (x a m a x). 
+
+isPalindrome xs = xs == reverse xs
+
+t6  = isPalindrome "abcdcba"
+
+-- | 7: Flatten a nested list structure.
+
+flatten []     = []
+flatten (x:xs) = x ++ flatten xs
+
+t7 = flatten [[1,2], [3], [4,5,6]]
+
+-- | 8: Eliminate consecutive duplicates of list elements.
+
+compress []  = []
+compress [x] = [x]
+compress (x:xs) | x == head xs = compress xs
+                | otherwise    = x : compress xs
+
+t8 = compress ["a","a","a","a","b","c","c","a","a","d","e","e","e","e"]
+
+-- | 9: Pack consecutive duplicates of list elements into sublists.
+-- |    If a list contains repeated elements they should be placed in separate sublists.
+
+pack xs = step xs []
+  where step []     acc = [acc]
+        step [y]    acc = [y:acc]
+        step (y:ys) acc | y == head ys = step ys (y:acc)
+                        | otherwise    = (y:acc) : step ys []
+
+t9 = pack ['a','a','a','a','b','c','c','a','a','d','e','e','e','e']
+
+-- | 10: Run-length encoding of a list. Use the result of problem P09 to implement
+--        the so-called run-length encoding data compression method.
+--       Consecutive duplicates of elements are encoded as lists (N E) where N 
+--        is the number of duplicates of the element E.
+
+encode xs = map (\(y:ys) -> (y, 1 + length ys)) (pack xs)
+
+t10 = encode ['a','a','a','a','b','c','c','a','a','d','e','e','e','e']
+
+-- | 11: Modify the result of problem 10 in such a way that if an element has no duplicates
+--        it is simply copied into the result list. Only elements with duplicates are transferred
+--        as (N E) lists.
+
+data T x = Mutiple (x, Integer)
+         | Single x
+         deriving (Show)
+
+encodeModified = map f . pack
+  where f [x]    = Single x
+        f (x:xs) = Multiple (x, 1 + length xs)
+
+t11 = encodeModified ['a','a','a','a','b','c','c','a','a','d','e','e','e','e']
+
+-- | 12: Given a run-length code list generated as specified in problem 11.
+--       Construct its uncompressed version.
+
+decodeModified = flatten . map dec
+  where dec (Single x)       = [x]
+        dec (Multiple (x,n)) = replicate (fromIntegral n) x
+
+t12 = decodeModified t11
+
+-- | 13: Implement the so-called run-length encoding data compression method directly.
+--       I.e. don't explicitly create the sublists containing the duplicates, as in problem 9,
+--        but only count them. As in problem P11, simplify the result list by replacing
+--        the singleton lists (1 X) by X.
+
+encodeDirect xs = step 1 xs
+  where step _ []  = []
+        step n (x:xs) | not (null xs) 
+                     && x == head xs = step (n+1) xs
+                      | n == 1       = Single x       : step 1 xs
+                      | otherwise    = Multiple (x,n) : step 1 xs
+
+t13 = encodeDirect ['a','a','a','a','b','c','c','a','a','d','e','e','e','e']
+
+-- | 14: Duplicate the elements of a list.
+
+dupli xs = flatten $ map (\x -> [x,x]) xs
+
+t14 = dupli [1,2,2,3]
+
+-- | 15: Replicate the elements of a list a given number of times.
+
+repli xs n = flatten $ map (replicate n) xs
+
+t15 = repli "abc" 3
+
+-- | 16: Drop every N'th element from a list.
+
+dropEvery xs n = step n xs
+  where step _ []     = []
+        step 1 (_:xs) = step n xs
+        step i (x:xs) = x : step (i-1) xs
+
+t16 = "abcdefgh" `dropEvery` 3
+
+-- | 17: Split a list into two parts; the length of the first part is given.
+
+split xs n = step n xs []
+  where step _ []     acc = (reverse acc, [])
+        step 0 ys     acc = (reverse acc, ys)
+        step n (y:ys) acc = step (n-1) ys (y:acc)
+
+t17 = "abcdefghik" `split` 3
+
+-- | 18: Given two indices, i and k, the slice is the list containing the elements between
+--        the i'th and k'th element of the original list (both limits included).
+--       Start counting the elements with 1. 
+
+slice xs i k = fst $ snd (xs `split` (i-1)) `split` (k-i+1)
+
+t18 = slice ['a','b','c','d','e','f','g','h','i','k'] 3 7
+
+-- | 19: Rotate a list N places to the left.
+
+rotate xs n | n > 0     = let (l,r) = xs `split` n               in r ++ l
+            | otherwise = let (l,r) = xs `split` (length xs + n) in r ++ l
+
+t19 = map (rotate ['a','b','c','d','e','f','g','h']) [3,-2]
+
+-- | 20: Remove the K'th element from a list.
+
+removeAt n xs = let (l,x:r) = xs `split` n
+                 in (x, l ++ r)
+
+t20 = removeAt 1 "abcd"
+
+-- | 21: Insert an element at a given position into a list.
+
+insertAt c s n = let (l,r) = s `split` (n-1)
+                  in l ++ (c : r)
+
+t21 = insertAt 'X' "abcd" 2
+
+-- | 22: Create a list containing all integers within a given range.
+
+range s e | s > e     = []
+          | otherwise = s : range (s+1) e
+
+t22 = range 4 9
+
+-- | 23: Extract a given number of randomly selected elements from a list.
+
+select inds xs = walk (sort $ nub inds) [1..] xs
+  where walk []     _        _      = []
+        walk _      _        []     = []
+        walk (i:is) (i':i's) (x:xs) | i == i'   = x : walk is i's xs
+                                    | otherwise = walk (i:is) i's xs
+
+selectNRandoms n xs = select ks xs
+  where ks = map ((+1) . (`mod` genericLength xs))
+           $ genericTake n $ randoms (mkStdGen 5) :: [Integer]
+
+t23 = selectNRandoms 3 "abcdefgh"
+
+-- | 24: Draw N different random numbers from the set 1..M.
+
+selectNRandomsFrom1To n m = selectNRandoms n [1..m]
+
+t24 = selectNRandomsFrom1To 6 49
