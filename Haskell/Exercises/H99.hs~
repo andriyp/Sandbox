@@ -1,7 +1,0 @@
-module Exercises.H99 where
-
-import Prelude hiding ( last )
-
--- | 1: Find the last element of a list.
-
-
