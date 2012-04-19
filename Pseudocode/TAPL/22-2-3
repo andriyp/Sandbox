@@ -1,0 +1,19 @@
+
+ solution [ λ x : X .
+              λ y : Y .
+                λ z : Z .
+                  (x z) (y z)
+          ]
+          
+   = { ( [ Y // Z -> B
+         , X // Z -> B -> C
+         ] , C )
+     ,
+       ( [ Y // Z -> B
+         , X // Z -> B -> Nat
+         ] , Nat )
+     ,
+       ( [ Y // Z -> B
+         , X // Z -> B -> (Z -> B)
+         ] , (Z -> B) )
+     }
