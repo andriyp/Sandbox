@@ -1,0 +1,24 @@
+
+
+E2:
+        c    a b
+  ---  ---  -----
+   a    b     c
+
+E2 {}      = {a}
+E2 {a}     = {a}
+E2 {b}     = {a}
+E2 {c}     = {a,b}
+E2 {a,b}   = {a,c}
+E2 {b,c}   = {a,b}
+E2 {a,c}   = {a,b}
+E2 {a,b,c} = {a,b,c}
+   
+All E2-Closed:
+ { X | E2(X) <= X } = { {a}, {a,b,c} }
+
+All E2-Consistent:
+ { X | X <= E2(X) } = { {}, {a}, {a,b,c} }
+
+μ E2 = {a}
+ν E2 = {a,b,c}

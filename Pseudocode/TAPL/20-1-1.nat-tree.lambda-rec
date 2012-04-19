@@ -1,0 +1,44 @@
+
+NatTree = μ T .
+            < leaf : Unit
+            , node : {Nat, T, T}
+            >
+
+leaf = < leaf = unit > as NatTree
+
+node : Nat -> NatTree -> NatTree -> NatTree
+node = λ x : Nat .
+         λ l : NatTree .
+           λ r : NatTree .
+             < node = {x, l, r} > as NatTree
+
+isLeaf : NatTree -> Bool
+isLeaf = λ t : NatTree .
+           case t of
+             < leaf = _ > -> true
+             < node = _ > -> false
+
+isNode : NatTree -> Bool
+isNode = λ t : NatTree .
+           case t of
+             < leaf = _ > -> false
+             < node = _ > -> true
+
+map : (Nat -> Nat) -> NatTree -> NatTree
+map = fix (
+  λ y : (Nat -> Nat) -> NatTree -> NatTree .
+    λ f : Nat -> Nat .
+      λ t : NatTree .
+        case t of
+          < leaf = _ >         -> t
+          < node = {x, l, r} > -> < node = {f x, y f l, y f r} >
+  )
+
+flattenDFS : NatTree -> NatList
+flattenDFS = fix (
+  λ y : NatTree -> NatList
+    λ t : NatTree .
+      case t of
+        < leaf = _ >         -> nil
+        < node = {x, l, r} > -> append (cons x (y l)) (y r)
+  )

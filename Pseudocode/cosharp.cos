@@ -1,0 +1,34 @@
+
+
+
+
+
+
+
+
+
+
+foldl1 : (a -> b) -> {a} -> {b}
+   | _ {}        = []
+   | f (x +> xs) = f x +> foldl1 f xs
+
+reparentize
+   | _ (Var c) = ([c], 'T')
+   | isFoldingMinus (App e1 op e2)
+       ?    op `elem` "+-"
+         && isFoldingMinus
+       = ("(" <> s1 <> {op} <> s2 <> ")", op)
+       
+       ? op `elem` "+-"
+       = (s1 <> {op} <> s2, op)
+       
+       ? otherwise
+       = (s1' <> {op} <> s2', op)
+ where
+   (s1,op1) = reparentize False       e1    
+   (s2,op2) = reparentize (op == '-') e2    
+   s1' ? op1 `elem` "+-" = "(" <> s1 <> ")"
+       ? otherwise       = s1        
+   s2' ? op2 `elem` "+-" || (op == '/' && op2 `elem` "*/")
+       = "(" <> s2 <> ")"
+       ? otherwise = s2

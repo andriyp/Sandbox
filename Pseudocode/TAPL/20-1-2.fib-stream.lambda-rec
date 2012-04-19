@@ -1,0 +1,21 @@
+
+NatStream = μ S . Unit -> { Nat, S }
+
+FibStream = Nat -> Nat -> NatStream
+
+fibs : NatStream
+fibs = fix (
+  λ y : FibStream .
+    λ a : Nat .
+      λ b : Nat .
+        let c = a + b
+         in λ _ : Unit .
+            { b , y b c }
+  ) 0 1
+
+hd : NatStream -> Nat
+hd = λ s : NatStream . (s unit).1
+
+tl : NatStream -> NatStream
+tl = λ s : NatStream . (s unit).2
+
