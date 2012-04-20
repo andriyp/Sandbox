@@ -15,27 +15,27 @@ data Type = TyNat
 
 type Constr = (Type, Type)
 
+-- extremely fast-n-dirty style
+
 inf :: Term -> ([Constr], Type)
-inf = fst . f [] [] [1..]
+inf = fst . f [] [1..]
   where
-    f ctx ctr tgs (LamT v ty t) = ((ctr', ty :-> ty'), tgs')
+    f ctx tgs (LamT v ty t) = ((ctr', ty :-> ty'), tgs')
       where
-        ((ctr', ty'), tgs') = f ((v, ty) : ctx) ctr tgs t
+        ((ctr', ty'), tgs') = f ((v, ty) : ctx) tgs t
         
-    f ctx ctr tgs (AppT l r) = ( ( (lty, rty :-> newTyVar) : (lctr ++ ctr ++ rctr)
+    f ctx tgs (AppT l r) = ( ( (lty, rty :-> newTyVar) : (lctr ++ rctr)
                                  , newTyVar )
                                , tgs''')
       where
-        ((lctr, lty), tgs')       = f ctx [] tgs  l
-        ((rctr, rty), (x:tgs''')) = f ctx [] tgs' r
+        ((lctr, lty), tgs')       = f ctx tgs  l
+        ((rctr, rty), (x:tgs''')) = f ctx tgs' r
         
         newTyVar = TyVar ("X" ++ show x)
     
-    f ctx ctr tgs (VarT v) = ((ctr, ty), tgs)
+    f ctx tgs (VarT v) = (([], ty), tgs)
       where
-        Just ty = lookup v ctx
-    
-    
+        Just ty = lookup v ctx        
 
 testT = LamT "x" (TyVar "X")
       $ LamT "y" (TyVar "Y")
