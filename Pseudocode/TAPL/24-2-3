@@ -20,12 +20,12 @@ mkNatC = λ s : Nat .
              }
            } as Counter           
 
-mkBoolFF = let {C,c} = mkNatC 0
-            in { *C
-               , { toggle = λ x : C .
-                              c.inc x
-                   isOpen = λ x : C .
-                              iseven (c.get x)
-                 }
-               } as FlipFlop
+mkNatFF = let {C,c} = mkNatC 0
+           in { *C
+              , { toggle = λ x : C .
+                             c.inc x
+                  isOpen = λ x : C .
+                             iseven (c.get x)
+                }
+              } as FlipFlop
               
