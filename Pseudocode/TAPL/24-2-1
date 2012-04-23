@@ -1,0 +1,19 @@
+
+let stack = { *(List [Nat])
+            , { new     = nil [Nat]
+              , push    = cons [Nat]
+              , pop     = tail [Nat]
+              , top     = head [Nat]
+              , isEmpty = isNil [Nat]
+              }
+            }
+         as { ∃Stack
+            , { new     : Stack
+              , push    : Nat -> Stack -> Stack
+              , pop     : Stack -> Stack
+              , top     : Stack -> Nat
+              , isEmpty : Stack -> Bool
+              }
+            }            
+         in top (push 1 (push 2 (push 3 new)))
+       

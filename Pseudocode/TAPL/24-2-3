@@ -1,0 +1,31 @@
+
+Counter = { ∃T
+          , { get : T
+            , inc : T -> T
+            , dec : T -> T
+            }
+          }
+
+FlipFlop = { ∃T
+           , { toggle : T -> T
+             , isOpen : T -> Bool
+             }
+           }
+
+mkNatC = λ s : Nat .
+           { *Nat
+           , { get = s
+             , inc = succ
+             , dec = pred
+             }
+           } as Counter           
+
+mkBoolFF = let {C,c} = mkNatC 0
+            in { *C
+               , { toggle = λ x : C .
+                              c.inc x
+                   isOpen = λ x : C .
+                              iseven (c.get x)
+                 }
+               } as FlipFlop
+              
