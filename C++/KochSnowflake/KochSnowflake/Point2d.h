@@ -3,12 +3,12 @@
 
 class Point2d {
 public:
-	float x, y;
-	
-	Point2d (float x, float y)
-		: x(x)
-		, y(y)
-	{}
+    float x, y;
+    
+    Point2d (float x, float y)
+        : x(x)
+        , y(y)
+    {}
 };
 
 #endif

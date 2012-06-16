@@ -5,15 +5,15 @@
 
 class Triangle2d {
 public:
-	Point2d ptA, ptB, ptC;
+    Point2d ptA, ptB, ptC;
 
-	Triangle2d (Point2d ptA, Point2d ptB, Point2d ptC)
-		: ptA(ptA)
-		, ptB(ptB)
-		, ptC(ptC)
-	{}
+    Triangle2d (Point2d ptA, Point2d ptB, Point2d ptC)
+        : ptA(ptA)
+        , ptB(ptB)
+        , ptC(ptC)
+    {}
 
-	void render ();
+    void render ();
 };
 
 #endif
