@@ -10,10 +10,7 @@
                   (setq ,sym ,form)))))))
 
 (defun unthunk (thunk)
-  (let ((x (funcall (thunk-fn thunk))))
-    (if (thunk-p x)
-        (unthunk x)
-        x)))
+ (funcall (thunk-fn thunk)))
 
 (defun $-head (xs)
   (unthunk (car xs)))
@@ -45,9 +42,12 @@
        (let ((,sym (lambda (,sym) ,form)))
          ,@body))))
 
+(defun foo (x y)
+  (print (+ x y)))
+
 (defparameter *fibs*
   (with-knot
-      (@ (lazy-cons 1 (lazy-cons 1 (lazy-zip #'+ @ ($-tail @)))))
+      (@ (lazy-cons 1 (lazy-cons 1 (let ((xs @)) (lazy-zip #'foo xs ($-tail xs))))))
     @))
 
-(print ($-take 7 *fibs*))
+(print ($-take 6 *fibs*))
