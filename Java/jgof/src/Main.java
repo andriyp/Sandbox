@@ -1,5 +1,7 @@
 import gof.memento.*;
 import gof.mediator.*;
+import gof.adapter.*;
+import gof.chain_of_responsibility.*;
 
 import static java.lang.System.*;
 
@@ -23,6 +25,7 @@ public class Main
         out.println(cnt.inc()); // 3
     }
     
+    @SuppressWarnings("unused")
     private static void testMediator ()
     {
         Mediator mediator = new Mediator();
@@ -37,8 +40,30 @@ public class Main
         talkerB.send("Hi there!");
     }
     
+    @SuppressWarnings("unused")
+    private static void testChainOfResponsibility ()
+    {
+        Handler<Integer> handler = new EvenIntHandler("A");
+        
+        handler.setNext(new EvenIntHandler("B"))
+               .setNext(new OddIntHandler("C"));
+        
+        handler.send(7);
+    }
+    
+    @SuppressWarnings("unused")
+    private static void testAdapter ()
+    {
+        Car car = new Car("Honda", 123);
+        NamedCar namedCar = new NamedCar(car);
+        out.println(namedCar.getName());
+    }
+    
     public static void main (String[] args)
     {
-        testMediator();
+        // testMemento();
+        // testMediator();
+        // testChainOfResponsibility();
+        // testAdapter();
     }
 }
