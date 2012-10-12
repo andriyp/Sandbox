@@ -1,6 +1,7 @@
 import gof.memento.*;
 import gof.mediator.*;
 import gof.adapter.*;
+import gof.bridge.*;
 import gof.chain_of_responsibility.*;
 
 import static java.lang.System.*;
@@ -59,11 +60,29 @@ public class Main
         out.println(namedCar.getName());
     }
     
+    @SuppressWarnings("unused")
+    private static void testBridge ()
+    {
+        Printer lcPrinter = new LowercasePrinter(),
+                ucPrinter = new UppercasePrinter();
+        
+        Message msgA = new RegularMessage("Lol a", lcPrinter),
+                msgB = new RegularMessage("Lol b", ucPrinter),
+                msgC = new ReversedMessage("Lol c", lcPrinter),
+                msgD = new ReversedMessage("Lol d", ucPrinter);
+        
+        msgA.print();
+        msgB.print();
+        msgC.print();
+        msgD.print();
+    }
+    
     public static void main (String[] args)
     {
         // testMemento();
         // testMediator();
         // testChainOfResponsibility();
         // testAdapter();
+        // testBridge();
     }
 }
