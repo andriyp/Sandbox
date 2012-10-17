@@ -62,4 +62,4 @@ instance Recipe (Patty Cabbage) Cabbage where
 -- Нам нужно, чтобы в печи можно было обжигать кирпичи
 data Brick = Brick
 
-bakeBrick oven = oven $ return ∘ const Brick
+bakeBrick oven = bake oven $ return ∘ const Brick
