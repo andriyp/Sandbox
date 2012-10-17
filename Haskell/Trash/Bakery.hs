@@ -54,10 +54,10 @@ data Meat    = Meat
 data Cabbage = Cabbage
    
 instance Recipe (Patty Meat) Meat where
-  cook oven Meat = return (Patty Meat)
+  cook oven Meat = bake oven $ return ∘ const (Patty Meat)
 
 instance Recipe (Patty Cabbage) Cabbage where
-  cook oven Cabbage = return (Patty Cabbage)
+  cook oven Cabbage = bake oven $ return ∘ const (Patty Cabbage)
 
 -- Нам нужно, чтобы в печи можно было обжигать кирпичи
 data Brick = Brick
